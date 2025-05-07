@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode } from "react";
-import { Header } from "./header";
+import { Header } from "./Header";
 // import "../styles/globals.css";
 
 type MainProps = {

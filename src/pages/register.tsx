@@ -3,6 +3,7 @@ import { RegisterForm } from "@/components/auth/RegisterForm";
 import { withPublic } from "@/utils/withPublic";
 
 import Image from 'next/image';
+import Link from "next/link";
 
 function RegisterPage() {
     return (
@@ -23,12 +24,9 @@ function RegisterPage() {
                 </p>
 
                 <div className="mx-auto">
-                    <a
-                        href="#"
-                        className="font-medium absolute left-1/2 -translate-x-1/2 text-purple-600 hover:text-purple-600 focus:outline-none focus:underline transition ease-in-out duration-150"
-                    >
+                    <Link href="/login" className="font-medium absolute left-1/2 -translate-x-1/2 text-purple-600 hover:text-purple-600 focus:outline-none focus:underline transition ease-in-out duration-150">
                         Já possui uma conta? Faça login clicando aqui
-                    </a>
+                    </Link>
                 </div>
             </div>
 
