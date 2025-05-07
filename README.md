@@ -1,87 +1,141 @@
-# Welcome to React Router!
-
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+Claro, Luan! Aqui está um exemplo completo e profissional do conteúdo para o seu `README.md`, com manual de instalação, funcionalidades, rotas e informações técnicas do projeto **TaskPlus**:
 
 ---
 
-Built with ❤️ using React Router.
+````markdown
+# 📋 TaskPlus
+
+**TaskPlus** é uma aplicação de gerenciamento de tarefas desenvolvida em **Next.js + TypeScript** no frontend e **Spring Boot** no backend. Seu foco é oferecer uma experiência simples, rápida e intuitiva para o controle de tarefas.
+
+Desenvolvido por **Luan Chaves**.  
+Versão atual: `v0.1.0`
+
+---
+
+## 🚀 Funcionalidades
+
+- ✅ Cadastro de usuários
+- ✅ Login com token de autenticação
+- ✅ Listagem de tarefas por usuário autenticado
+- ✅ Criação, edição e exclusão de tarefas
+- ✅ Validações de email e senha no formulário
+- ✅ Navegação protegida por autenticação
+
+---
+
+## ⚙️ Tecnologias
+
+### Frontend
+
+- [Next.js 15.3.1](https://nextjs.org/)
+- [React 19](https://reactjs.org/)
+- [TypeScript 5](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- Axios para requisições HTTP
+
+### Backend
+
+> O backend da aplicação é desenvolvido com **Spring Boot** e está disponível em um repositório separado.
+
+---
+
+## 📂 Instalação
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/DevMboo/task-plus.git
+cd task-plus
+````
+
+### 2. Instale as dependências
+
+```bash
+npm install
+# ou
+yarn install
+```
+
+### 3. Execute o ambiente de desenvolvimento
+
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+O projeto estará disponível em [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📌 Estrutura de Diretórios
+
+```
+.
+├── components/           # Componentes reutilizáveis
+│   └── common/           # Campos e elementos de formulário
+├── contexts/             # Contexto de autenticação
+├── hooks/                # Hooks personalizados (validação de email/senha)
+├── pages/                # Páginas da aplicação
+│   ├── login.tsx         # Tela de login
+│   ├── register.tsx      # Tela de registro
+│   ├── tasks.tsx         # Painel de tarefas
+│   └── index.tsx         # Redirecionamento ou landing
+├── services/             # Serviços de autenticação e API
+└── styles/               # Estilização global com Tailwind
+```
+
+---
+
+## 🔐 Rotas disponíveis
+
+| Rota        | Método | Descrição                        |
+| ----------- | ------ | -------------------------------- |
+| `/login`    | GET    | Tela de login                    |
+| `/register` | GET    | Tela de registro de novo usuário |
+| `/tasks`    | GET    | Painel de tarefas (protegido)    |
+| `/`    | GET    | Visualização geral (protegido)   |
+
+> As rotas privadas só são acessíveis com um token JWT armazenado no `localStorage`.
+
+---
+
+## 🔗 Integração com o Backend
+
+A aplicação se comunica com um backend **Spring Boot** através de endpoints da API REST. O token JWT retornado no login é armazenado no `localStorage` e enviado em requisições autenticadas.
+
+---
+
+## 🧪 Scripts disponíveis
+
+| Script          | Descrição                                |
+| --------------- | ---------------------------------------- |
+| `npm run dev`   | Inicia o servidor de desenvolvimento     |
+| `npm run build` | Compila o projeto para produção          |
+| `npm run start` | Inicia o servidor de produção            |
+| `npm run lint`  | Executa o linter nos arquivos do projeto |
+
+---
+
+## 👤 Autor
+
+Desenvolvido com 💜 por **Luan Chaves** **DevMboo**
+
+---
+
+## 📌 Versão
+
+**v0.1.0**
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a licença MIT.
+
+```
+
+---
+
+Se quiser, posso gerar esse arquivo automaticamente e salvar como `README.md`. Deseja que eu faça isso?
+```
