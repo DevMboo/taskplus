@@ -1,6 +1,3 @@
-Claro, Luan! Aqui está um exemplo completo e profissional do conteúdo para o seu `README.md`, com manual de instalação, funcionalidades, rotas e informações técnicas do projeto **TaskPlus**:
-
----
 
 ````markdown
 # 📋 TaskPlus
@@ -133,9 +130,4 @@ Desenvolvido com 💜 por **Luan Chaves** **DevMboo**
 
 Este projeto está licenciado sob a licença MIT.
 
-```
-
----
-
-Se quiser, posso gerar esse arquivo automaticamente e salvar como `README.md`. Deseja que eu faça isso?
 ```
