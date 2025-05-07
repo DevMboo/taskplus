@@ -3,6 +3,7 @@ import { withPublic } from "@/utils/withPublic";
 import Image from 'next/image';
 
 import { LoginForm } from '@/components/auth/LoginForm';
+import Link from "next/link";
 
 
 function LoginPage() {
@@ -24,12 +25,9 @@ function LoginPage() {
                 </p>
 
                 <div className="mx-auto">
-                    <a
-                        href="#"
-                        className="font-medium absolute left-1/2 -translate-x-1/2 text-purple-600 hover:text-purple-600 focus:outline-none focus:underline transition ease-in-out duration-150"
-                    >
+                    <Link href="/register" className="font-medium absolute left-1/2 -translate-x-1/2 text-purple-600 hover:text-purple-600 focus:outline-none focus:underline transition ease-in-out duration-150">
                         Ainda não possui conta?
-                    </a>
+                    </Link>
                 </div>
             </div>
 
