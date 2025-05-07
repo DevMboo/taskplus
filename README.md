@@ -1,6 +1,3 @@
-Claro, Luan! Aqui está um exemplo completo e profissional do conteúdo para o seu `README.md`, com manual de instalação, funcionalidades, rotas e informações técnicas do projeto **TaskPlus**:
-
----
 
 ````markdown
 # 📋 TaskPlus
