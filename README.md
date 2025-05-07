@@ -1,36 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Claro, Luan! Aqui está um exemplo completo e profissional do conteúdo para o seu `README.md`, com manual de instalação, funcionalidades, rotas e informações técnicas do projeto **TaskPlus**:
 
-## Getting Started
+---
 
-First, run the development server:
+````markdown
+# 📋 TaskPlus
+
+**TaskPlus** é uma aplicação de gerenciamento de tarefas desenvolvida em **Next.js + TypeScript** no frontend e **Spring Boot** no backend. Seu foco é oferecer uma experiência simples, rápida e intuitiva para o controle de tarefas.
+
+Desenvolvido por **Luan Chaves**.  
+Versão atual: `v0.1.0`
+
+---
+
+## 🚀 Funcionalidades
+
+- ✅ Cadastro de usuários
+- ✅ Login com token de autenticação
+- ✅ Listagem de tarefas por usuário autenticado
+- ✅ Criação, edição e exclusão de tarefas
+- ✅ Validações de email e senha no formulário
+- ✅ Navegação protegida por autenticação
+
+---
+
+## ⚙️ Tecnologias
+
+### Frontend
+
+- [Next.js 15.3.1](https://nextjs.org/)
+- [React 19](https://reactjs.org/)
+- [TypeScript 5](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- Axios para requisições HTTP
+
+### Backend
+
+> O backend da aplicação é desenvolvido com **Spring Boot** e está disponível em um repositório separado.
+
+---
+
+## 📂 Instalação
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/DevMboo/task-plus.git
+cd task-plus
+````
+
+### 2. Instale as dependências
+
+```bash
+npm install
+# ou
+yarn install
+```
+
+### 3. Execute o ambiente de desenvolvimento
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O projeto estará disponível em [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📌 Estrutura de Diretórios
 
-## Learn More
+```
+.
+├── components/           # Componentes reutilizáveis
+│   └── common/           # Campos e elementos de formulário
+├── contexts/             # Contexto de autenticação
+├── hooks/                # Hooks personalizados (validação de email/senha)
+├── pages/                # Páginas da aplicação
+│   ├── login.tsx         # Tela de login
+│   ├── register.tsx      # Tela de registro
+│   ├── tasks.tsx         # Painel de tarefas
+│   └── index.tsx         # Redirecionamento ou landing
+├── services/             # Serviços de autenticação e API
+└── styles/               # Estilização global com Tailwind
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Rotas disponíveis
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Rota        | Método | Descrição                        |
+| ----------- | ------ | -------------------------------- |
+| `/login`    | GET    | Tela de login                    |
+| `/register` | GET    | Tela de registro de novo usuário |
+| `/tasks`    | GET    | Painel de tarefas (protegido)    |
+| `/`    | GET    | Visualização geral (protegido)   |
 
-## Deploy on Vercel
+> As rotas privadas só são acessíveis com um token JWT armazenado no `localStorage`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔗 Integração com o Backend
+
+A aplicação se comunica com um backend **Spring Boot** através de endpoints da API REST. O token JWT retornado no login é armazenado no `localStorage` e enviado em requisições autenticadas.
+
+---
+
+## 🧪 Scripts disponíveis
+
+| Script          | Descrição                                |
+| --------------- | ---------------------------------------- |
+| `npm run dev`   | Inicia o servidor de desenvolvimento     |
+| `npm run build` | Compila o projeto para produção          |
+| `npm run start` | Inicia o servidor de produção            |
+| `npm run lint`  | Executa o linter nos arquivos do projeto |
+
+---
+
+## 👤 Autor
+
+Desenvolvido com 💜 por **Luan Chaves** **DevMboo**
+
+---
+
+## 📌 Versão
+
+**v0.1.0**
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a licença MIT.
+
+```
+
+---
+
+Se quiser, posso gerar esse arquivo automaticamente e salvar como `README.md`. Deseja que eu faça isso?
+```
