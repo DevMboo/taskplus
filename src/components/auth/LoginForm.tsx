@@ -4,37 +4,46 @@ import usePassword from "@/hooks/usePassword";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import InputField from "../common/InputField";
+import { login } from "@/services/authService";
 
 export function LoginForm() {
-    const { login } = useAuth();
+    const { setAuthState } = useAuth();
     const router = useRouter();
 
-    // Usando os hooks para email e senha
     const { value: email, onChange: setEmail, error: emailError } = useEmail();
     const { value: password, onChange: setPassword, error: passwordError } = usePassword();
-
     const [formError, setFormError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+        setFormError(null);
 
         // Validação do formulário
-        if (emailError || passwordError) {
-            setFormError("Por favor, corrija os erros antes de continuar.");
+        if (emailError || passwordError || !email || !password) {
+            setFormError("Por favor, preencha todos os campos corretamente.");
+            setIsLoading(false);
             return;
         }
 
-        if (!email || !password) {
-            setFormError("Por favor, preencha todos os campos.");
-            return;
+        try {
+            const success = await login(email, password);
+            
+            if (success) {
+                setAuthState({ isAuthenticated: true });
+                router.push('/tasks');
+            } else {
+                setFormError("Credenciais inválidas. Tente novamente.");
+            }
+        } catch (error) {
+            setFormError("Erro ao conectar com o servidor. Tente novamente.");
+            console.error("Login error:", error);
+        } finally {
+            setIsLoading(false);
         }
-
-        const fakeToken = "abc123";
-
-        login(fakeToken);
-
-        router.push('/tasks');
     };
+
     return (
         <form onSubmit={handleLogin}>
             <div>
@@ -65,14 +74,13 @@ export function LoginForm() {
             )}
 
             <div className="mt-6">
-                <span className="block w-full rounded-md shadow-sm">
-                    <button
-                        type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-600 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                    >
-                        Entrar com minha conta
-                    </button>
-                </span>
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    {isLoading ? 'Autenticando...' : 'Entrar com minha conta'}
+                </button>
             </div>
         </form>
     );

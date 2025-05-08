@@ -1,5 +1,3 @@
-
-````markdown
 # 📋 TaskPlus
 
 **TaskPlus** é uma aplicação de gerenciamento de tarefas desenvolvida em **Next.js + TypeScript** no frontend e **Spring Boot** no backend. Seu foco é oferecer uma experiência simples, rápida e intuitiva para o controle de tarefas.
@@ -116,7 +114,7 @@ A aplicação se comunica com um backend **Spring Boot** através de endpoints d
 
 ## 👤 Autor
 
-Desenvolvido com 💜 por **Luan Chaves** **DevMboo**
+Desenvolvido com 💜 por **Luan Chaves**
 
 ---
 

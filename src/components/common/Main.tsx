@@ -1,15 +1,18 @@
+// components/Main.tsx
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoading } from "@/contexts/LoadingContext";
+import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 import { ReactNode } from "react";
 import { Header } from "./Header";
-// import "../styles/globals.css";
 
 type MainProps = {
   children: ReactNode;
 };
 
 export function Main({ children }: MainProps) {
+  const { isAuthenticated } = useAuth();
+  const { isLoading } = useLoading();
 
-const { isAuthenticated } = useAuth();
   return (
     <main
       className="
@@ -21,10 +24,12 @@ const { isAuthenticated } = useAuth();
         w-full
         min-h-screen
         bg-neutral-50
+        relative
       "
     >
-        { isAuthenticated && <Header />}
+      {isAuthenticated && <Header />}
       {children}
+      {isLoading && <LoadingOverlay />}
     </main>
   );
 }

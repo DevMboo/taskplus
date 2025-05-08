@@ -1,15 +1,18 @@
 import { useAuth } from "@/contexts/AuthContext";
+import { logout as logoutService } from "@/services/authService";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 export function Header() {
-    const { logout } = useAuth();
+    const { setAuthState } = useAuth();
     const router = useRouter();
-    
-    const handleLoggout = () => {
-        logout();
+
+    const handleLogout = () => {
+        logoutService(); 
+        setAuthState({ isAuthenticated: false });
         router.push('/login');
     };
+
     return (
         <header className="w-full bg-purple-600 shadow rounded-2xl">
             <div className="mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center ">
@@ -39,10 +42,14 @@ export function Header() {
                     <Link href="/tasks" className="text-white hover:text-gray-900">
                         Minhas Tarefas
                     </Link>
-                    <Link href="/profile" className="text-white hover:text-gray-900">
-                        Perfil
+                    <Link href="/register" className="text-white hover:text-gray-900">
+                        Convidar participante
                     </Link>
-                    <button type="button" onClick={handleLoggout} className="text-white hover:text-red-300 !cursor-pointer">
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="text-white hover:text-red-300 !cursor-pointer"
+                    >
                         Sair
                     </button>
                 </nav>

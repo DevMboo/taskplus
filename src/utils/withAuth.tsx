@@ -1,20 +1,33 @@
+// utils/withAuth.tsx
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import type { ComponentType } from "react";
+import { isAuthenticated } from "@/services/authService";
 
 export function withAuth<P extends object>(WrappedComponent: ComponentType<P>) {
   return function WithAuthComponent(props: P) {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated: contextAuth, setAuthState } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-      if (!isAuthenticated) {
-        router.push("/login");
-      }
-    }, [isAuthenticated, router]);
+      const checkAuth = async () => {
+        const hasToken = isAuthenticated();
+        
+        if (!hasToken) {
+          router.push("/login");
+          return;
+        }
 
-    if (!isAuthenticated) {
+        if (hasToken && !contextAuth) {
+          setAuthState({ isAuthenticated: true });
+        }
+      };
+
+      checkAuth();
+    }, [contextAuth, router, setAuthState]);
+
+    if (!contextAuth) {
       return null;
     }
 

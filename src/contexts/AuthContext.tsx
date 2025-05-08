@@ -1,43 +1,33 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { isAuthenticated } from '@/services/authService';
 
 type AuthContextType = {
-  isAuthenticated: boolean;
-  login: (token: string) => void;
-  logout: () => void;
+    isAuthenticated: boolean;
+    setAuthState: (state: { isAuthenticated: boolean }) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+export function AuthProvider({ children }: { children: ReactNode }) {
+    const [authState, setAuthState] = useState({
+        isAuthenticated: false
+    });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-  }, []);
+    useEffect(() => {
+        setAuthState({ isAuthenticated: isAuthenticated() });
+    }, []);
 
-  const login = (token: string) => {
-    localStorage.setItem("token", token);
-    setIsAuthenticated(true);
-  };
+    return (
+        <AuthContext.Provider value={{ ...authState, setAuthState }}>
+            {children}
+        </AuthContext.Provider>
+    );
+}
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-// Hook customizado para usar o contexto
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export function useAuth() {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+}

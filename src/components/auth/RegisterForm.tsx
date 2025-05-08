@@ -5,10 +5,10 @@ import InputField from "../common/InputField";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { registerUser } from "@/services/authService"; 
+//import { registerUser } from "@/services/authService"; 
 
 export function RegisterForm() {
-  const { login } = useAuth();
+  //const { login } = useAuth();
   const router = useRouter();
 
   const { value: email, onChange: setEmail, error: emailError } = useEmail();
@@ -30,13 +30,13 @@ export function RegisterForm() {
     }
 
     try {
-      const user = await registerUser(email, password);
+      //const user = await registerUser(email, password);
       
-      const token = user.token;
+      //const token = user.token;
 
-      localStorage.setItem("token", token);
+      //localStorage.setItem("token", token);
 
-      login(token);
+      //login(token);
 
       router.push("/tasks");
     } catch (error) {

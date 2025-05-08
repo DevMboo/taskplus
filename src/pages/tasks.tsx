@@ -1,21 +1,67 @@
-"use client";
+
 import { withAuth } from "@/utils/withAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KanbanBoard } from "@/components/tasks/KanbanBoard";
 import { TableView } from "@/components/tasks/TableView";
 import Modal from "@/components/common/Modal";
 import TaskForm from "@/components/tasks/TaskForm";
+import { useLoading } from '@/contexts/LoadingContext';
+import { createTask, fetchTeams, fetchUsers, fetchTasks } from '@/services/taskService';
+import { User } from "@/types/team";
+import { Task } from "@/types/task";
+
+export interface Team {
+  id: number;
+  name: string;
+  users?: User[];
+}
 
 function TasksPage() {
   const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
-
   const [isModalOpen, setModalOpen] = useState(false);
+  const [teams, setTeams] = useState<Array<{id: number, name: string}>>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const { startLoading, stopLoading } = useLoading();
 
-    const handleCreateTask = (taskData: any) => {
-        console.log('Nova tarefa criada:', taskData);
-        // // Aqui você pode chamar uma API para salvar no backend
-        // setModalOpen(false);
+  useEffect(() => {
+    const loadData = async () => {
+      startLoading();
+      try {
+        const [teamsData, tasksData] = await Promise.all([
+          fetchTeams(),
+          fetchTasks()
+        ]);
+        setTeams(teamsData);
+        setTasks(tasksData);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      } finally {
+        stopLoading();
+      }
     };
+
+    loadData();
+  }, []);
+
+  const handleCreateTask = async (taskData: any) => {
+    startLoading();
+    try {
+      await createTask({
+        title: taskData.title,
+        description: taskData.description,
+        dueDate: taskData.dueDate,
+        status: taskData.status.toUpperCase().replace(' ', '_') as 'PENDENTE' | 'EM_ANDAMENTO' | 'CONCLUIDA',
+        teamId: taskData.teamId,
+        responsibleId: taskData.responsibleId
+      });
+      setModalOpen(false);
+      stopLoading();
+    } catch (error) {
+      console.error("Failed to create task:", error);
+    } finally {
+      stopLoading();
+    }
+  };
 
   return (
     <div className="p-4">
@@ -88,7 +134,14 @@ function TasksPage() {
         onClose={() => setModalOpen(false)}
         title="Cadastrar Nova Tarefa"
       >
-        <TaskForm onSubmit={handleCreateTask} />
+         <TaskForm
+            onSubmit={handleCreateTask}
+            teams={teams.map(team => ({
+              id: team.id,
+              name: team.name,
+              users: (team as Team).users || [] // Type assertion + fallback
+            }))}
+          />
       </Modal>
     </div>
   );
