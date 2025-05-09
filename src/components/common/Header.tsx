@@ -39,11 +39,8 @@ export function Header() {
                 </div>
 
                 <nav className="flex space-x-4">
-                    <Link href="/tasks" className="text-white hover:text-gray-900">
-                        Minhas Tarefas
-                    </Link>
                     <Link href="/register" className="text-white hover:text-gray-900">
-                        Convidar participante
+                        Adicionar membro
                     </Link>
                     <button
                         type="button"

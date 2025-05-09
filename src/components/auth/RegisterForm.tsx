@@ -1,87 +1,160 @@
-import useEmail from "@/hooks/useEmail";
-import usePassword from "@/hooks/usePassword";
-import InputField from "../common/InputField";
+// components/auth/RegisterForm.tsx
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useAlert } from '@/contexts/AlertContext';
+import { useLoading } from '@/contexts/LoadingContext';
+import api from '@/services/api';
+import InputField from '../common/InputField';
+import SelectField from '../common/SelectField';
 
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/router";
-import { useState } from "react";
-//import { registerUser } from "@/services/authService"; 
+import { useName } from '@/hooks/useName';
+import { useTeam } from '@/hooks/useTeam';
+import { useEmail } from '@/hooks/useEmail';
+import { usePassword } from '@/hooks/usePassword';
+import { registerUser } from '@/services/userService';
+
+type Team = {
+  id: number;
+  name: string;
+};
 
 export function RegisterForm() {
-  //const { login } = useAuth();
   const router = useRouter();
-
-  const { value: email, onChange: setEmail, error: emailError } = useEmail();
-  const { value: password, onChange: setPassword, error: passwordError } = usePassword();
-
+  const { showAlert } = useAlert();
+  const { startLoading, stopLoading } = useLoading();
+  
+  const { value: name, onChange: setValue, error: nameError, validate: validateName } = useName();
+  const { value: email, onChange: setEmail, error: emailError, validate: validateEmail } = useEmail();
+  const { value: password, onChange: setPassword, error: passwordError, validate: validatePassword } = usePassword();
+  const { value: teamId, onChange: setTeamId, error: teamError, validate: validateTeam } = useTeam();
+  
+  const [perfil, setPerfil] = useState('COLABORADOR');
+  const [teams, setTeams] = useState<Team[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (emailError || passwordError) {
-      setFormError("Por favor, corrija os erros antes de continuar.");
-      return;
-    }
-
-    if (!email || !password) {
-      setFormError("Por favor, preencha todos os campos.");
-      return;
-    }
-
+  const loadTeams = async () => {
     try {
-      //const user = await registerUser(email, password);
-      
-      //const token = user.token;
-
-      //localStorage.setItem("token", token);
-
-      //login(token);
-
-      router.push("/tasks");
+      const response = await api.get('/teams');
+      setTeams(response.data);
     } catch (error) {
-      setFormError("Erro ao criar o usuário. Tente novamente.");
+      showAlert('danger', 'Erro ao carregar equipes');
     }
   };
 
-  return (
-    <form onSubmit={handleRegister}>
-      <div>
-        <InputField
-          id="email"
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          placeholder="user@example.com"
-          error={emailError ?? undefined}
-        />
-      </div>
+  const validateForm = () => {
+    const isValidName = validateName();
+    const isValidEmail = validateEmail();
+    const isValidPassword = validatePassword();
+    const isValidTeam = validateTeam();
+    
+    return isValidName && isValidEmail && isValidPassword && isValidTeam;
+  };
 
-      <div className="mt-6">
-        <InputField
-          id="password"
-          label="Senha"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          error={passwordError ?? undefined}
-        />
-      </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+  
+    if (!validateForm()) return;
+  
+    startLoading();
+    setIsLoading(true);
+  
+    try {
+      const success = await registerUser(
+        name,
+        email,
+        password,
+        Number(teamId),
+        perfil
+      );
+  
+      if (success) {
+        showAlert('success', 'Usuário cadastrado com sucesso!');
+        router.push('/tasks');
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Erro ao cadastrar usuário';
+      setFormError(message);
+      showAlert('danger', message);
+    } finally {
+      stopLoading();
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadTeams();
+  }, []);
+
+  return (
+    <form className="space-y-6" onSubmit={handleSubmit}>
+      <InputField
+        id="name"
+        label="Nome completo"
+        type="text"
+        value={name}
+        onChange={setValue}
+        error={nameError ?? undefined}
+        required
+      />
+
+      <InputField
+        id="email"
+        label="Email"
+        type="email"
+        value={email}
+        onChange={setEmail}
+        error={emailError ?? undefined}
+        required
+      />
+
+      <InputField
+        id="password"
+        label="Senha"
+        type="password"
+        value={password}
+        onChange={setPassword}
+        error={passwordError ?? undefined}
+        required
+      />
+
+      <SelectField
+        id="teamId"
+        label="Equipe"
+        value={teamId}
+        onChange={setTeamId}
+        options={teams.map(team => ({
+          value: team.id.toString(),
+          label: team.name
+        }))}
+        error={teamError ?? undefined}
+        required
+      />
+
+      {/* <SelectField
+        id="perfil"
+        label="Perfil"
+        value={perfil}
+        onChange={setPerfil}
+        options={[
+          { value: 'COLABORADOR', label: 'Colaborador' },
+          { value: 'ADMINISTRADOR', label: 'Administrador' }
+        ]}
+      /> */}
 
       {formError && (
         <div className="mt-4 text-red-500 text-sm">{formError}</div>
       )}
 
-      <div className="mt-6">
-        <span className="block w-full rounded-md shadow-sm">
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-600 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-          >
-            Registrar
-          </button>
-        </span>
+      <div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full flex justify-center py-2 px-4 cursor-pointer border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isLoading ? 'Cadastrando...' : 'Cadastrar novo usuário'}
+        </button>
       </div>
     </form>
   );

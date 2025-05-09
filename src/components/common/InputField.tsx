@@ -1,13 +1,13 @@
-// components/InputField.tsx
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 interface InputFieldProps {
     id: string;
     label: string;
     type?: string;
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
+    required?: boolean;
     error?: string;
 }
 
@@ -18,6 +18,7 @@ const InputField: React.FC<InputFieldProps> = ({
     value,
     onChange,
     placeholder,
+    required = false,
     error,
 }) => {
     return (
@@ -26,7 +27,7 @@ const InputField: React.FC<InputFieldProps> = ({
                 htmlFor={id}
                 className="block text-sm font-medium leading-5 text-gray-700"
             >
-                {label}
+                {label} {required && <span className="text-red-500">*</span>}
             </label>
             <div className="mt-1 relative rounded-md shadow-sm">
                 <input

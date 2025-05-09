@@ -3,11 +3,20 @@ export type TaskStatus = 'PENDENTE' | 'EM_ANDAMENTO' | 'CONCLUIDA';
 export interface Task {
   id: number;
   title: string;
-  description: string;
-  status: TaskStatus;
+  description?: string;
+  status: 'PENDENTE' | 'EM_ANDAMENTO' | 'CONCLUIDA';
   dueDate: string;
-  teamId: number;
-  responsibleId: number;
-  createdAt: string;
-  updatedAt: string;
+  team: {
+    id: number;
+    name: string;
+  };
+  responsibleId: User; // Agora usando a interface User
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  perfil: string;
 }

@@ -5,6 +5,7 @@ type LoginResponse = {
 };
 
 export const login = async (email: string, password: string): Promise<boolean> => {
+    
     try {
         const response = await api.post<LoginResponse>('/auth/login', {
             email,
@@ -19,7 +20,6 @@ export const login = async (email: string, password: string): Promise<boolean> =
         }
         return false;
     } catch (error) {
-        console.error('Login error:', error);
         return false;
     }
 };

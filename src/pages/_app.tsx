@@ -3,6 +3,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import '@/styles/globals.css'; // ou seu CSS global
 import { Main } from '@/components/common/Main';
 import { LoadingProvider } from '@/contexts/LoadingContext';
+import { AlertProvider } from '@/contexts/AlertContext';
+import { AlertContainer } from '@/components/common/AlertContainer';
 
 
 
@@ -10,9 +12,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <LoadingProvider>
-        <Main>
-          <Component {...pageProps} />
-        </Main>
+        <AlertProvider>
+          <Main>
+            <Component {...pageProps} />
+            <AlertContainer />
+          </Main>
+        </AlertProvider>
       </LoadingProvider>
     </AuthProvider>
   );

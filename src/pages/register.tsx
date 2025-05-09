@@ -1,8 +1,6 @@
-
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { withAuth } from "@/utils/withAuth";
 
-import Image from 'next/image';
 import Link from "next/link";
 
 function RegisterPage() {

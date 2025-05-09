@@ -1,18 +1,36 @@
-import useInput from './useInput';
+// hooks/usePassword.ts
+import { useState } from 'react';
 
-const usePassword = (initialValue: string = "") => {
-  const validatePassword = (value: string): string | null => {
-    if (value.length < 6) {
-      return "A senha deve ter pelo menos 6 caracteres.";
-    }
-    return null;
+export const usePassword = (initialValue = '') => {
+  const [value, setValue] = useState(initialValue);
+  const [error, setError] = useState<string | null>(null);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    if (error) setError(null);
   };
 
-  return useInput({
-    type: "password",
-    initialValue,
-    validate: validatePassword,
-  });
-};
+  const setValueDirectly = (newValue: string) => {
+    setValue(newValue);
+  };
 
-export default usePassword;
+  const validate = () => {
+    if (!value.trim()) {
+      setError('Senha é obrigatória');
+      return false;
+    }
+    if (value.length < 6) {
+      setError('Senha deve ter pelo menos 6 caracteres');
+      return false;
+    }
+    return true;
+  };
+
+  return { 
+    value, 
+    onChange, 
+    setValue: setValueDirectly,
+    error, 
+    validate 
+  };
+};

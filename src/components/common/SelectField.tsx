@@ -10,6 +10,7 @@ interface SelectFieldProps {
   error?: string;
   disabled?: boolean;
   className?: string;
+  required?: boolean;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -20,6 +21,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   options,
   error,
   disabled,
+  required = false,
   className = ''
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,7 +44,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
           error ? 'text-red-600' : 'text-gray-700'
         }`}
       >
-        {label}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
       
       <div className="mt-1 relative rounded-md shadow-sm">

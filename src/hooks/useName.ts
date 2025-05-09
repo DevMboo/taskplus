@@ -1,11 +1,11 @@
-// hooks/useEmail.ts
-import { useState } from 'react';
+// hooks/useName.ts
+import { ChangeEvent, useState } from 'react';
 
-export const useEmail = (initialValue = '') => {
+export const useName = (initialValue = '') => {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
     if (error) setError(null);
   };
@@ -16,11 +16,7 @@ export const useEmail = (initialValue = '') => {
 
   const validate = () => {
     if (!value.trim()) {
-      setError('Email é obrigatório');
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      setError('Email inválido');
+      setError('Nome é obrigatório');
       return false;
     }
     return true;
@@ -28,7 +24,7 @@ export const useEmail = (initialValue = '') => {
 
   return { 
     value, 
-    onChange, 
+    onChange,
     setValue: setValueDirectly,
     error, 
     validate 

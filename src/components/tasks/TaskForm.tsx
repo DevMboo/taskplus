@@ -46,9 +46,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
 
     const { value: status, onChange: setStatus } = useStatus();
 
-    const [selectedTeamId, setSelectedTeamId] = React.useState<number | null>(null);
-    const [responsibleId, setResponsibleId] = React.useState<number | null>(null);
-
     const getTeamUsers = (teamId: number | null): User[] => {
         if (!teamId) return [];
         const team = teams.find(t => t.id === teamId);
@@ -71,7 +68,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
         validationMessage: 'Selecione uma equipe'
     });
 
-    // Configuração para responsável (obrigatório apenas se a equipe tiver membros)
     const selectedTeam = teams.find(t => t.id.toString() === teamValue);
     const teamUsers = selectedTeam?.users || [];
 
@@ -85,42 +81,41 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
         setError: setResponsibleError
     } = useSelect<User>({
         options: teamUsers,
-        isRequired: teamUsers.length > 0, // Dinâmico baseado na equipe selecionada
+        isRequired: teamUsers.length > 0,
         getValue: (user) => user.id.toString(),
         getLabel: (user) => user.name,
         validationMessage: 'Selecione um responsável'
     });
 
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+    
         let hasError = false;
-
+    
         setTeamTouched();
         setResponsibleTouched();
-
+    
         if (title.trim() === '') {
             setTitleError('Este campo é obrigatório');
             hasError = true;
         }
-
+    
         if (description.trim() === '') {
             setDescriptionError('Este campo é obrigatório');
             hasError = true;
         }
-
+    
         if (dueDate.trim() === '') {
             setDueDateError('Este campo é obrigatório');
             hasError = true;
         }
-
+    
         if (!teamValue) {
             setTeamError('Selecione uma equipe');
             hasError = true;
         }
-
-        if (!responsibleValue && teamUsers.length > 0) {
+        
+        if (!responsibleValue) {
             setResponsibleError('Selecione um responsável');
             hasError = true;
         }
@@ -128,7 +123,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
         if (hasError) {
             return;
         }
-
+    
         onSubmit({
             title,
             description,
@@ -175,7 +170,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
                 id="status"
                 label="Status"
                 value={status}
-                onChange={(value: any) => setStatus(value)} // Corrigido: função que recebe o valor
+                onChange={(value: any) => setStatus(value)}
                 options={[
                     { value: 'Pendente', label: 'Pendente' },
                     { value: 'Em andamento', label: 'Em andamento' },
@@ -187,7 +182,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
                 id="team"
                 label="Equipe"
                 value={teamValue || ''}
-                onChange={(value: any) => onTeamChange(value)} // Corrigido: função que recebe o valor
+                onChange={(value: any) => onTeamChange(value)} 
                 options={teamOptions}
                 error={teamError || undefined}
             />
@@ -196,7 +191,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
                 id="responsible"
                 label="Responsável"
                 value={responsibleValue || ''}
-                onChange={(value:any) => onResponsibleChange(value)} // Corrigido: função que recebe o valor
+                onChange={(value: any) => onResponsibleChange(value)}
                 options={responsibleOptions}
                 error={responsibleError || undefined}
                 disabled={!teamValue || teamUsers.length === 0}
