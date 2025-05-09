@@ -153,5 +153,3 @@ Desenvolvido com 💜 por **Luan Chaves**
 **v0.1.0**
 
 ---
-
-```
