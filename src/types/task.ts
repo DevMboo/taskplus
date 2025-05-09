@@ -10,7 +10,7 @@ export interface Task {
     id: number;
     name: string;
   };
-  responsibleId: User; // Agora usando a interface User
+  responsibleId: User;
 }
 
 export interface User {

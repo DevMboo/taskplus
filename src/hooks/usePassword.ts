@@ -1,4 +1,3 @@
-// hooks/usePassword.ts
 import { useState } from 'react';
 
 export const usePassword = (initialValue = '') => {

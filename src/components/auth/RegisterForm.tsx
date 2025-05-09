@@ -1,4 +1,3 @@
-// components/auth/RegisterForm.tsx
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAlert } from '@/contexts/AlertContext';
@@ -131,17 +130,6 @@ export function RegisterForm() {
         error={teamError ?? undefined}
         required
       />
-
-      {/* <SelectField
-        id="perfil"
-        label="Perfil"
-        value={perfil}
-        onChange={setPerfil}
-        options={[
-          { value: 'COLABORADOR', label: 'Colaborador' },
-          { value: 'ADMINISTRADOR', label: 'Administrador' }
-        ]}
-      /> */}
 
       {formError && (
         <div className="mt-4 text-red-500 text-sm">{formError}</div>

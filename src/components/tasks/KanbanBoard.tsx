@@ -24,7 +24,6 @@ export function KanbanBoard({ tasks: initialTasks, onRefresh, onTaskClick }: Kan
   const [isDragging, setIsDragging] = useState(false);
   const [currentDragStatus, setCurrentDragStatus] = useState<TaskStatusDisplay | null>(null);
 
-  // Sincroniza o estado local quando as props mudam
   useEffect(() => {
     setTasks(initialTasks);
   }, [initialTasks]);

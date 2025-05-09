@@ -1,6 +1,5 @@
 import { useState, ChangeEvent } from "react";
 
-// Tipagem do hook
 type UseInputProps = {
   type: string;
   initialValue: string;

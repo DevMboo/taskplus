@@ -66,11 +66,9 @@ export function TableView({ tasks: initialTasks, onRefresh, onTaskClick }: Table
 
     if (!taskId) return;
     
-    // Salva o estado anterior para rollback em caso de erro
     const originalTasks = tasks;
     
     try {
-      // Atualização otimista
       setTasks(prevTasks => 
         prevTasks.map(task => 
           task.id === taskId ? { ...task, status: newApiStatus } : task
@@ -79,13 +77,10 @@ export function TableView({ tasks: initialTasks, onRefresh, onTaskClick }: Table
 
       await api.patch(`/tasks/${taskId}/status?novoStatus=${newApiStatus}`);
       
-      // Chama refresh se necessário
       if (onRefresh) onRefresh();
     } catch (error) {
-      // Rollback em caso de erro
       setTasks(originalTasks);
       console.error("Erro ao atualizar status:", error);
-      // Aqui você poderia adicionar um toast de erro
     }
   };
 

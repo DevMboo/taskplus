@@ -1,4 +1,3 @@
-// hooks/useTitle.ts
 import { useState } from 'react';
 
 export const useTitle = (isRequired: boolean, initialValue: string = '') => {

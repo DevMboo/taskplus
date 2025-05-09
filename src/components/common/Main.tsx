@@ -1,4 +1,3 @@
-// components/Main.tsx
 import { useAuth } from "@/contexts/AuthContext";
 import { useLoading } from "@/contexts/LoadingContext";
 import { LoadingOverlay } from "@/components/common/LoadingOverlay";

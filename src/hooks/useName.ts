@@ -1,4 +1,3 @@
-// hooks/useName.ts
 import { ChangeEvent, useState } from 'react';
 
 export const useName = (initialValue = '') => {

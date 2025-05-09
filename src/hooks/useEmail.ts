@@ -1,4 +1,3 @@
-// hooks/useEmail.ts
 import { useState } from 'react';
 
 export const useEmail = (initialValue = '') => {
