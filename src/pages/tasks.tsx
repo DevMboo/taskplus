@@ -117,7 +117,7 @@ function TasksPage() {
       const apiStatus = taskData.status === 'Pendente' ? 'PENDENTE' :
                        taskData.status === 'Em andamento' ? 'EM_ANDAMENTO' :
                        'CONCLUIDA';
-                       
+
       await api.put(`/tasks/${editingTask.id}`, {
         ...taskData,
         status: taskData.status ? apiStatus : editingTask.status
@@ -245,7 +245,7 @@ function TasksPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
-        title="Cadastrar Nova Tarefa"
+        title={editingTask ? "Editar tarefa" : "Cadastrar Nova Tarefa"}
       >
         <TaskForm
           onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
