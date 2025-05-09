@@ -154,7 +154,4 @@ Desenvolvido com 💜 por **Luan Chaves**
 
 ---
 
-## 📄 Licença
-
-Este projeto está licenciado sob a licença MIT.
 ```
