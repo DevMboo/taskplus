@@ -257,7 +257,7 @@ function TasksPage() {
           initialData={editingTask ? {
             title: editingTask.title,
             description: editingTask.description,
-            dueDate: editingTask.dueDate.split('T')[0], // Formata a data
+            dueDate: editingTask.dueDate.split('T')[0],
             status: editingTask.status === 'PENDENTE' ? 'Pendente' : 
                    editingTask.status === 'EM_ANDAMENTO' ? 'Em andamento' : 'Concluída',
             teamId: editingTask.team.id.toString(),
