@@ -15,15 +15,15 @@ const ALL_STATUSES: TaskStatusDisplay[] = ['Pendente', 'Em andamento', 'Concluí
 
 interface TableViewProps {
   tasks: Task[];
-  onRefresh?: () => void; // Adicionado para permitir atualização externa
+  onRefresh?: () => void; 
+  onTaskClick?: (taskId: number) => void;
 }
 
-export function TableView({ tasks: initialTasks, onRefresh }: TableViewProps) {
+export function TableView({ tasks: initialTasks, onRefresh, onTaskClick }: TableViewProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [isDragging, setIsDragging] = useState(false);
   const [currentDragStatus, setCurrentDragStatus] = useState<TaskStatusDisplay | null>(null);
 
-  // Sincroniza o estado local quando as props mudam
   useEffect(() => {
     setTasks(initialTasks);
   }, [initialTasks]);
@@ -123,6 +123,7 @@ export function TableView({ tasks: initialTasks, onRefresh }: TableViewProps) {
                 draggable
                 onDragStart={(e) => handleDragStart(e, task.id)}
                 onDragEnd={handleDragEnd}
+                onClick={() => onTaskClick?.(task.id)}
                 className={`flex items-center justify-between px-4 py-3 border-t border-t-neutral-100 hover:bg-neutral-50 bg-white ${
                   isDragging ? 'cursor-grabbing' : 'cursor-grab'
                 }`}

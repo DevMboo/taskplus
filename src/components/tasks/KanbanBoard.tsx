@@ -16,9 +16,10 @@ const ALL_STATUSES: TaskStatusDisplay[] = ['Pendente', 'Em andamento', 'Concluí
 interface KanbanBoardProps {
   tasks: Task[];
   onRefresh?: () => void;
+  onTaskClick?: (taskId: number) => void;
 }
 
-export function KanbanBoard({ tasks: initialTasks, onRefresh }: KanbanBoardProps) {
+export function KanbanBoard({ tasks: initialTasks, onRefresh, onTaskClick }: KanbanBoardProps) {
   const [tasks, setTasks] = useState(initialTasks);
   const [isDragging, setIsDragging] = useState(false);
   const [currentDragStatus, setCurrentDragStatus] = useState<TaskStatusDisplay | null>(null);
@@ -71,11 +72,9 @@ export function KanbanBoard({ tasks: initialTasks, onRefresh }: KanbanBoardProps
 
     if (!taskId) return;
     
-    // Salva o estado anterior para rollback em caso de erro
     const originalTasks = tasks;
     
     try {
-      // Atualização otimista
       setTasks(prevTasks => 
         prevTasks.map(task => 
           task.id === taskId ? { ...task, status: newApiStatus } : task
@@ -84,13 +83,10 @@ export function KanbanBoard({ tasks: initialTasks, onRefresh }: KanbanBoardProps
 
       await api.patch(`/tasks/${taskId}/status?novoStatus=${newApiStatus}`);
       
-      // Chama refresh se necessário
       if (onRefresh) onRefresh();
     } catch (error) {
-      // Rollback em caso de erro
       setTasks(originalTasks);
       console.error("Erro ao atualizar status:", error);
-      // Aqui você poderia adicionar um toast de erro
     }
   };
 
@@ -128,6 +124,7 @@ export function KanbanBoard({ tasks: initialTasks, onRefresh }: KanbanBoardProps
                   key={task.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, task.id)}
+                  onClick={() => onTaskClick?.(task.id)}
                   onDragEnd={handleDragEnd}
                   className={`p-3 border border-neutral-200 rounded-lg hover:shadow-md transition-shadow bg-white ${
                     isDragging ? 'cursor-grabbing' : 'cursor-grab'

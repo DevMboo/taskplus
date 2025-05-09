@@ -5,10 +5,12 @@ import { TableView } from "@/components/tasks/TableView";
 import Modal from "@/components/common/Modal";
 import TaskForm from "@/components/tasks/TaskForm";
 import { useLoading } from '@/contexts/LoadingContext';
-import { createTask, fetchTeams, fetchUsers, fetchTasks } from '@/services/taskService';
+import { createTask, fetchTeams, fetchUsers, fetchTasks, fetchTaskById } from '@/services/taskService';
 import { User } from "@/types/team";
 import { Task } from "@/types/task";
 import { useAlert } from "@/contexts/AlertContext";
+import TaskFilters from "@/components/common/TaskFilters";
+import api from "@/services/api";
 
 export interface Team {
   id: number;
@@ -21,42 +23,56 @@ function TasksPage() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const { startLoading, stopLoading } = useLoading();
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleRefresh = () => {
-    setRefreshKey(prev => prev + 1);
-  };
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     loadData();
   }, [refreshKey]);
 
-  const toggleViewMode = async (mode: "kanban" | "table") => {
-    if (viewMode !== mode) {
-      setViewMode(mode);
-      await loadData();
-    }
-  };
-  
-  const { showAlert } = useAlert();
-
   const loadData = async () => {
- 
+  
     try {
       const [teamsData, tasksData] = await Promise.all([
         fetchTeams(),
         fetchTasks()
       ]);
+      
       setTeams(teamsData);
       setTasks(tasksData);
+      setFilteredTasks(tasksData);
+      
+      const users = teamsData.flatMap((team: { users: any; }) => team.users || []);
+      setAllUsers(users);
     } catch (error) {
       showAlert('danger', 'Erro ao carregar tarefas', 'Erro');
     } finally {
-    
+      
     }
   };
 
+  const handleTaskClick = async (taskId: number) => {
+    try {
+      const task = await fetchTaskById(taskId);
+      setEditingTask(task);
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Erro ao buscar tarefa:", error);
+    }
+  };
+
+
+  const handleFilter = (filteredTasks: Task[]) => {
+    setFilteredTasks(filteredTasks);
+  };
+
+  const handleResetFilters = () => {
+    setFilteredTasks(tasks);
+  };
 
   const handleCreateTask = async (taskData: any) => {
     startLoading();
@@ -94,17 +110,64 @@ function TasksPage() {
     }
   };
 
+  const handleUpdateTask = async (taskData: any) => {
+    if (!editingTask) return;
+    
+    try {
+      const apiStatus = taskData.status === 'Pendente' ? 'PENDENTE' :
+                       taskData.status === 'Em andamento' ? 'EM_ANDAMENTO' :
+                       'CONCLUIDA';
+                       
+      await api.put(`/tasks/${editingTask.id}`, {
+        ...taskData,
+        status: taskData.status ? apiStatus : editingTask.status
+      });
+      handleRefresh();
+      setModalOpen(false);
+      setEditingTask(null);
+      showAlert('success', 'Tarefa criada com sucesso!');
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+    }
+  };
 
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+    setEditingTask(null);
+  }
+  
+  const toggleViewMode = async (mode: "kanban" | "table") => {
+    if (viewMode !== mode) {
+      setViewMode(mode);
+      await loadData();
+    }
+  };
 
   return (
     <div className="p-4">
-      <button
-        onClick={() => setModalOpen(true)}
-        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 cursor-pointer"
-      >
-        Criar nova tarefa
-      </button>
 
+      <div className="border-b border-gray-200 py-2 mb-3">
+        <div className="">
+          <TaskFilters
+            users={allUsers}
+            onFilter={handleFilter}
+            onReset={handleResetFilters}
+          />
+        </div>
+
+        <button
+          onClick={() => handleOpenModal()}
+          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 cursor-pointer"
+        >
+          Criar nova tarefa
+        </button>
+      </div>
+
+      
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-purple-600">Quadro de tarefas</h1>
 
@@ -162,12 +225,20 @@ function TasksPage() {
       </div>
 
       <div>
-      {tasks.length > 0 ? (
+      {filteredTasks.length > 0 ? (
         viewMode === "kanban" ? 
-          <KanbanBoard tasks={tasks}   onRefresh={handleRefresh} /> : 
-          <TableView tasks={tasks}   onRefresh={handleRefresh} />
+          <KanbanBoard 
+            tasks={filteredTasks} 
+            onRefresh={handleRefresh}
+            onTaskClick={handleTaskClick}
+          /> : 
+          <TableView 
+            tasks={filteredTasks} 
+            onRefresh={handleRefresh}
+            onTaskClick={handleTaskClick}
+          />
       ) : (
-        <p>Nenhuma tarefa criada</p>
+        <p>Nenhuma tarefa encontrada</p>
       )}
     </div>
 
@@ -177,13 +248,22 @@ function TasksPage() {
         title="Cadastrar Nova Tarefa"
       >
         <TaskForm
-          onSubmit={handleCreateTask}
+          onSubmit={editingTask ? handleUpdateTask : handleCreateTask}
           teams={teams.map(team => ({
             id: team.id,
             name: team.name,
             users: team.users || []
           }))}
-        />
+          initialData={editingTask ? {
+            title: editingTask.title,
+            description: editingTask.description,
+            dueDate: editingTask.dueDate.split('T')[0], // Formata a data
+            status: editingTask.status === 'PENDENTE' ? 'Pendente' : 
+                   editingTask.status === 'EM_ANDAMENTO' ? 'Em andamento' : 'Concluída',
+            teamId: editingTask.team.id.toString(),
+            responsibleId: editingTask.responsibleId?.id.toString()
+          } : undefined} 
+          />
       </Modal>
     </div>
   );

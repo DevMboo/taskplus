@@ -1,5 +1,5 @@
 // components/TaskForm.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
 import { useTitle } from '@/hooks/useTitle';
@@ -11,18 +11,25 @@ import { useSelect } from '@/hooks/useSelect';
 
 interface TaskFormProps {
     teams: Team[];
-
     onSubmit: (taskData: {
-        title: string,
-        description: string,
-        dueDate: string,
-        status: string,
-        teamId: any,
-        responsibleId: any
+      title: string;
+      description: string;
+      dueDate: string;
+      status: string;
+      teamId: string;
+      responsibleId?: string;
     }) => void;
-}
+    initialData?: {
+      title: string;
+      description?: string; // Garanta que não é opcional aqui
+      dueDate: string;
+      status: string;
+      teamId: string;
+      responsibleId?: string;
+    };
+  }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams, initialData }) => {
     const {
         value: title,
         onChange: setTitle,
@@ -51,6 +58,25 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
         const team = teams.find(t => t.id === teamId);
         return team?.users || [];
     };
+
+    useEffect(() => {
+        if (initialData) {
+          const safeInitialData = {
+            ...initialData,
+            description: initialData?.description || ''
+          };
+          
+          setTitle(safeInitialData.title);
+          setDescription(safeInitialData.description);
+          setDueDate(safeInitialData.dueDate);
+          setStatus(safeInitialData.status);
+          onTeamChange(safeInitialData.teamId);
+          
+          if (safeInitialData.responsibleId) {
+            onResponsibleChange(safeInitialData.responsibleId);
+          }
+        }
+      }, [initialData]);
 
     const {
         value: teamValue,
@@ -129,8 +155,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, teams }) => {
             description,
             dueDate,
             status,
-            teamId: teamValue,
-            responsibleId: responsibleValue
+            teamId: teamValue || '', 
+            responsibleId: responsibleValue || undefined
         });
     };
 

@@ -34,6 +34,20 @@ export const fetchTasks = async (): Promise<Task[]> => {
   }
 };
 
+export const fetchTasksByFilter = async (status?: TaskStatus, responsibleId?: number): Promise<Task[]> => {
+  try {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    if (responsibleId) params.append('responsibleId', responsibleId.toString());
+    
+    const response = await api.get(`/tasks/filter?${params.toString()}`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching filtered tasks:', error);
+    throw new Error('Failed to fetch filtered tasks');
+  }
+};
+
 export const fetchTaskById = async (id: number): Promise<Task> => {
   try {
     const response = await api.get(`/tasks/${id}`);
